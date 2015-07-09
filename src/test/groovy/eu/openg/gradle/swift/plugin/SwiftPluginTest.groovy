@@ -22,6 +22,7 @@ import org.junit.Before
 import org.junit.Test
 
 import static org.hamcrest.core.Is.is
+import static org.hamcrest.core.IsInstanceOf.instanceOf
 import static org.junit.Assert.assertThat
 
 class SwiftPluginTest {
@@ -37,5 +38,10 @@ class SwiftPluginTest {
     @Test
     void canApplyPlugin() {
         assertThat project.plugins.hasPlugin(SwiftPlugin), is(true)
+    }
+
+    @Test
+    void addsSwift2ThriftTask() {
+        assertThat project.tasks.swift2thrift, is(instanceOf(Swift2ThriftTask))
     }
 }

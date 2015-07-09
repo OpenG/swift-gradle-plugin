@@ -16,13 +16,12 @@
 
 package eu.openg.gradle.swift.plugin
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
+import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.TaskAction
 
-class SwiftPlugin implements Plugin<Project> {
+class Swift2ThriftTask extends DefaultTask {
 
-    @Override
-    void apply(Project project) {
-        project.tasks.create 'swift2thrift', Swift2ThriftTask
+    @TaskAction
+    void swift2Thrift() {
     }
 }
