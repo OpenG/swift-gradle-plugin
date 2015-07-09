@@ -18,16 +18,21 @@ package com.facebook.swift.generator.swift2thrift
 
 import org.junit.Before
 import org.junit.Test
+import org.slf4j.Logger
 
 import static org.assertj.core.api.Assertions.assertThat
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.verify
 
 class Swift2ThriftConverterTest {
+
+    String EXAMPLE_PACKAGE = 'com.example.calculator.protocol'
 
     Swift2ThriftConverter converter
 
     @Before
     public void setUp() throws Exception {
-        converter = new Swift2ThriftConverter()
+        converter = new Swift2ThriftConverter(null)
     }
 
     @Test
@@ -37,7 +42,17 @@ class Swift2ThriftConverterTest {
 
     @Test
     void itShouldBePossibleToAddNewInputFiles() {
-        converter.inputFiles.add "asd"
-        assertThat(converter.inputFiles).contains "asd"
+        converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
+        assertThat(converter.inputFiles).contains EXAMPLE_PACKAGE + '.TCalculatorService'
+    }
+
+    @Test
+    void addingSameFileMultipleTimesShouldProduceAWarning() {
+        Logger logger = mock Logger
+        converter = new Swift2ThriftConverter(logger)
+        2.times {
+            converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
+        }
+        verify(logger).warn "File '{}' was already added before", EXAMPLE_PACKAGE + '.TCalculatorService'
     }
 }

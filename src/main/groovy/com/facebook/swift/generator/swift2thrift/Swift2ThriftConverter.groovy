@@ -16,7 +16,21 @@
 
 package com.facebook.swift.generator.swift2thrift
 
+import org.slf4j.Logger
+
 class Swift2ThriftConverter {
 
     List<String> inputFiles = []
+
+    private final Logger logger
+
+    Swift2ThriftConverter(Logger logger) {
+        this.logger = logger
+    }
+
+    void addInputFile(String inputFile) {
+        if (inputFiles.contains(inputFile))
+            logger.warn "File '{}' was already added before", inputFile
+        inputFiles.add(inputFile)
+    }
 }
