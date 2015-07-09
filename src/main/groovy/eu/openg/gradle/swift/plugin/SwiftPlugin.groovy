@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-apply plugin: 'groovy'
+package eu.openg.gradle.swift.plugin
 
-repositories {
-    mavenCentral()
-}
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 
-dependencies {
-    compile localGroovy()
-    compile gradleApi()
+class SwiftPlugin implements Plugin<Project> {
+
+    @Override
+    void apply(Project project) {
+    }
 }

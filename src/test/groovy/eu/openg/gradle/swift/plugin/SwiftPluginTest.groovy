@@ -14,13 +14,28 @@
  * limitations under the License.
  */
 
-apply plugin: 'groovy'
+package eu.openg.gradle.swift.plugin
 
-repositories {
-    mavenCentral()
-}
+import org.gradle.api.Project
+import org.gradle.testfixtures.ProjectBuilder
+import org.junit.Before
+import org.junit.Test
 
-dependencies {
-    compile localGroovy()
-    compile gradleApi()
+import static org.hamcrest.core.Is.is
+import static org.junit.Assert.assertThat
+
+class SwiftPluginTest {
+
+    Project project;
+
+    @Before
+    void setUp() throws Exception {
+        project = ProjectBuilder.builder().build()
+        project.apply plugin: SwiftPlugin
+    }
+
+    @Test
+    void canApplyPlugin() {
+        assertThat project.plugins.hasPlugin(SwiftPlugin), is(true)
+    }
 }
