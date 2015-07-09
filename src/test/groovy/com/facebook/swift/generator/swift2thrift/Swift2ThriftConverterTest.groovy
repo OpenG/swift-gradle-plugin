@@ -17,7 +17,9 @@
 package com.facebook.swift.generator.swift2thrift
 
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.slf4j.Logger
 
 import static org.assertj.core.api.Assertions.assertThat
@@ -25,6 +27,9 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 
 class Swift2ThriftConverterTest {
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder()
 
     String EXAMPLE_PACKAGE = 'com.example.calculator.protocol'
 
@@ -54,5 +59,23 @@ class Swift2ThriftConverterTest {
             converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
         }
         verify(logger).warn "File '{}' was already added before", EXAMPLE_PACKAGE + '.TCalculatorService'
+        assertThat(converter.inputFiles).hasSize 2
+    }
+
+    @Test
+    void providedInputFilesShouldBeConvertedToThriftIDL() {
+        converter.addInputFile EXAMPLE_PACKAGE + '.TDivisionByZeroException'
+        converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
+        converter.addInputFile EXAMPLE_PACKAGE + '.TOperation'
+        def out = testFolder.newFile()
+        converter.outputFile = out
+
+        converter.convert()
+
+        assertThat(out).hasSameContentAs new File(getResource('fixtures/service.thrift').toURI())
+    }
+
+    static def getResource(String name) {
+        Thread.currentThread().contextClassLoader.getResource name
     }
 }
