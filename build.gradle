@@ -21,6 +21,12 @@ repositories {
 }
 
 dependencies {
+
     compile localGroovy()
     compile gradleApi()
+
+    compile 'com.facebook.swift:swift-generator:0.15.1'
+
+    testCompile 'org.assertj:assertj-core:3.1.0'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
