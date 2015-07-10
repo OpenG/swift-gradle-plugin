@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+plugins {
+    id "com.gradle.plugin-publish" version "0.9.1"
+}
+
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
@@ -42,41 +46,51 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.1.0'
 }
 
-jar {
-    manifest {
-        attributes(
-                'Specification-Title': title,
-                'Specification-Vendor': organizationName,
-                'Implementation-Title': 'eu.openg.swift',
-                'Implementation-Vendor-Id': 'eu.openg',
-                'Implementation-Vendor': organizationName,
-                'Implementation-Version': version,
-                'Created-By': 'Gradle ' + gradle.gradleVersion
-        )
+jar.manifest {
+    attributes(
+            'Specification-Title': title,
+            'Specification-Vendor': organizationName,
+            'Implementation-Title': 'eu.openg.swift',
+            'Implementation-Vendor-Id': 'eu.openg',
+            'Implementation-Vendor': organizationName,
+            'Implementation-Version': version,
+            'Created-By': 'Gradle ' + gradle.gradleVersion
+    )
+}
+
+publishing.publications {
+    mavenJava(MavenPublication) {
+
+        from components.java
+
+        pom.withXml {
+            def project = asNode()
+            project.appendNode 'name', title
+            project.appendNode 'description', description
+
+            def organization = project.appendNode 'organization'
+            organization.appendNode 'name', organizationName
+            organization.appendNode 'url', 'http://openg.eu'
+
+            def licenses = project.appendNode 'licenses'
+            def license = licenses.appendNode 'license'
+            license.appendNode 'name', 'Apache License, Version 2.0'
+            license.appendNode 'url', 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            license.appendNode 'distribution', 'repo'
+        }
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
+pluginBundle {
+    website = 'https://github.com/OpenG/swift-gradle-plugin'
+    vcsUrl = 'https://github.com/OpenG/swift-gradle-plugin'
+    description = project.description
+    tags = ['swift', 'thrift', 'converter']
 
-            from components.java
-
-            pom.withXml {
-                def project = asNode()
-                project.appendNode 'name', title
-                project.appendNode 'description', description
-
-                def organization = project.appendNode 'organization'
-                organization.appendNode 'name', organizationName
-                organization.appendNode 'url', 'http://openg.eu'
-
-                def licenses = project.appendNode 'licenses'
-                def license = licenses.appendNode 'license'
-                license.appendNode 'name', 'Apache License, Version 2.0'
-                license.appendNode 'url', 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                license.appendNode 'distribution', 'repo'
-            }
+    plugins {
+        swiftPlugin {
+            id = 'eu.openg.swift'
+            displayName = title
         }
     }
 }
