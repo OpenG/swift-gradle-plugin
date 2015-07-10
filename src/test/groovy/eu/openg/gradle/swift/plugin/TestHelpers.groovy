@@ -16,30 +16,13 @@
 
 package eu.openg.gradle.swift.plugin
 
-import org.gradle.api.Project
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Before
-import org.junit.Test
+import static java.lang.Thread.currentThread
 
-import static org.assertj.core.api.StrictAssertions.assertThat
+class TestHelpers {
 
-class SwiftPluginTest {
+    static def EXAMPLE_PACKAGE = 'com.example.calculator.protocol'
 
-    Project project;
-
-    @Before
-    void setUp() throws Exception {
-        project = ProjectBuilder.builder().build()
-        project.apply plugin: SwiftPlugin
-    }
-
-    @Test
-    void canApplyPlugin() {
-        assertThat(project.plugins.hasPlugin(SwiftPlugin)).isTrue()
-    }
-
-    @Test
-    void addsSwift2ThriftTask() {
-        assertThat(project.tasks.swift2thrift).isInstanceOf Swift2ThriftTask
+    static def getResource(String name) {
+        currentThread().contextClassLoader.getResource name
     }
 }
