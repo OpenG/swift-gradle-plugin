@@ -21,9 +21,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
 import org.junit.Test
 
-import static org.hamcrest.core.Is.is
-import static org.hamcrest.core.IsInstanceOf.instanceOf
-import static org.junit.Assert.assertThat
+import static org.assertj.core.api.StrictAssertions.assertThat
 
 class SwiftPluginTest {
 
@@ -37,11 +35,11 @@ class SwiftPluginTest {
 
     @Test
     void canApplyPlugin() {
-        assertThat project.plugins.hasPlugin(SwiftPlugin), is(true)
+        assertThat(project.plugins.hasPlugin(SwiftPlugin)).isTrue()
     }
 
     @Test
     void addsSwift2ThriftTask() {
-        assertThat project.tasks.swift2thrift, is(instanceOf(Swift2ThriftTask))
+        assertThat(project.tasks.swift2thrift).isInstanceOf Swift2ThriftTask
     }
 }
