@@ -1,5 +1,6 @@
 # Gradle Swift Plugin
 
+[![Build Status](https://travis-ci.org/OpenG/swift-gradle-plugin.svg?branch=master)](https://travis-ci.org/OpenG/swift-gradle-plugin)
 Gradle Swift Plugin uses Swift2Thrift code generator to generate `.thrift` files from Swift-annotated Java files.
 
 # License
