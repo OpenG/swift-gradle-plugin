@@ -22,7 +22,7 @@ group = 'eu.openg.gradle'
 version = '0.1.0'
 
 ext {
-    title = 'Thrift Gradle Plugin Test'
+    title = 'Thrift Gradle Plugin'
     organizationName = 'OpenG (Atvira Karta, LLC)'
 }
 
