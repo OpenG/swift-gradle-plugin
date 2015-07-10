@@ -21,6 +21,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
+import static eu.openg.gradle.swift.plugin.TestHelpers.getEXAMPLE_PACKAGE
+import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.StrictAssertions.assertThatThrownBy
 
@@ -28,8 +30,6 @@ class Swift2ThriftConverterTest {
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder()
-
-    String EXAMPLE_PACKAGE = 'com.example.calculator.protocol'
 
     Swift2ThriftConverter converter
 
@@ -85,9 +85,5 @@ class Swift2ThriftConverterTest {
         file.readLines().inject { result, line ->
             result + '\n' + line
         } + '\n'
-    }
-
-    static def getResource(String name) {
-        Thread.currentThread().contextClassLoader.getResource name
     }
 }

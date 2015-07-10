@@ -16,24 +16,13 @@
 
 package eu.openg.gradle.swift.plugin
 
-import com.facebook.swift.generator.swift2thrift.Swift2ThriftConverter
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
+import static java.lang.Thread.currentThread
 
-class Swift2ThriftTask extends DefaultTask {
+class TestHelpers {
 
-    @Input
-    Set<String> inputFiles
+    static def EXAMPLE_PACKAGE = 'com.example.calculator.protocol'
 
-    @OutputFile
-    File outputFile
-
-    @TaskAction
-    void swift2Thrift() {
-        def converter = new Swift2ThriftConverter()
-        converter.outputFile = outputFile
-        converter.convert inputFiles
+    static def getResource(String name) {
+        currentThread().contextClassLoader.getResource name
     }
 }

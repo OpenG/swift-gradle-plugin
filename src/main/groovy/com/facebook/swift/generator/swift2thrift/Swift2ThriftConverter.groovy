@@ -25,7 +25,7 @@ class Swift2ThriftConverter {
             .defaultPackage('')
 
     void setOutputFile(File outputFile) {
-        builder.outputFile(outputFile)
+        builder.outputFile outputFile
     }
 
     void convert(Iterable<String> inputFiles) {
