@@ -17,33 +17,23 @@
 package com.facebook.swift.generator.swift2thrift
 
 import com.google.common.collect.ImmutableMap
-import org.slf4j.Logger
 
 class Swift2ThriftConverter {
 
-    private final Logger logger
-
-    def inputFiles = []
-
-    def builder = Swift2ThriftGeneratorConfig.builder()
+    private def builder = Swift2ThriftGeneratorConfig.builder()
             .includeMap(ImmutableMap.builder().build())
-            .defaultPackage('');
-
-    Swift2ThriftConverter(Logger logger) {
-        this.logger = logger
-    }
-
-    void addInputFile(String inputFile) {
-        if (inputFiles.contains(inputFile))
-            logger.warn "File '{}' was already added before", inputFile
-        inputFiles.add(inputFile)
-    }
+            .defaultPackage('')
 
     void setOutputFile(File outputFile) {
         builder.outputFile(outputFile)
     }
 
-    void convert() {
+    void convert(Iterable<String> inputFiles) {
+        if (inputFiles == null || !inputFiles.size())
+            throw new MissingInputFilesException()
         new Swift2ThriftGenerator(builder.build()).parse inputFiles
+    }
+
+    class MissingInputFilesException extends RuntimeException {
     }
 }

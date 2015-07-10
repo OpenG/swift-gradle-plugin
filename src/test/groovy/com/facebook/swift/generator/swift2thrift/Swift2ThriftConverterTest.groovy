@@ -20,11 +20,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.slf4j.Logger
 
 import static org.assertj.core.api.Assertions.assertThat
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+import static org.assertj.core.api.StrictAssertions.assertThatThrownBy
 
 class Swift2ThriftConverterTest {
 
@@ -37,42 +35,56 @@ class Swift2ThriftConverterTest {
 
     @Before
     public void setUp() throws Exception {
-        converter = new Swift2ThriftConverter(null)
+        converter = new Swift2ThriftConverter()
     }
 
     @Test
-    void initiallyInputFilesShouldBeEmpty() {
-        assertThat(converter.inputFiles).isEmpty()
+    void whenNoInputFilesAreProvidedExceptionShouldBeThrown() {
+        assertThatThrownBy {
+            converter.convert(null)
+        }.isInstanceOf Swift2ThriftConverter.MissingInputFilesException
+        assertThatThrownBy {
+            converter.convert([])
+        }.isInstanceOf Swift2ThriftConverter.MissingInputFilesException
     }
 
     @Test
-    void itShouldBePossibleToAddNewInputFiles() {
-        converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
-        assertThat(converter.inputFiles).contains EXAMPLE_PACKAGE + '.TCalculatorService'
-    }
-
-    @Test
-    void addingSameFileMultipleTimesShouldProduceAWarning() {
-        Logger logger = mock Logger
-        converter = new Swift2ThriftConverter(logger)
-        2.times {
-            converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
+    void whenOutputDirIsNotSetExpectResultPrintedToStdout() {
+        def defaultOut = System.out
+        def out = new ByteArrayOutputStream()
+        try {
+            System.out = new PrintStream(out)
+            converter.convert([
+                    EXAMPLE_PACKAGE + '.TDivisionByZeroException',
+                    EXAMPLE_PACKAGE + '.TCalculatorService',
+                    EXAMPLE_PACKAGE + '.TOperation'
+            ])
+        } finally {
+            System.setOut defaultOut
         }
-        verify(logger).warn "File '{}' was already added before", EXAMPLE_PACKAGE + '.TCalculatorService'
-        assertThat(converter.inputFiles).hasSize 2
+
+        def expected = readFile new File(getResource('fixtures/service.thrift').toURI())
+        assertThat(new String(out.toByteArray())).isEqualTo expected
     }
 
     @Test
     void providedInputFilesShouldBeConvertedToThriftIDL() {
-        converter.addInputFile EXAMPLE_PACKAGE + '.TDivisionByZeroException'
-        converter.addInputFile EXAMPLE_PACKAGE + '.TCalculatorService'
-        converter.addInputFile EXAMPLE_PACKAGE + '.TOperation'
         def out = testFolder.newFile()
         converter.outputFile = out
 
-        converter.convert()
+        converter.convert([
+                EXAMPLE_PACKAGE + '.TDivisionByZeroException',
+                EXAMPLE_PACKAGE + '.TCalculatorService',
+                EXAMPLE_PACKAGE + '.TOperation'
+        ])
 
         assertThat(out).hasSameContentAs new File(getResource('fixtures/service.thrift').toURI())
+    }
+
+    static def readFile(File file) {
+        file.readLines().inject { result, line ->
+            result + '\n' + line
+        } + '\n'
     }
 
     static def getResource(String name) {
