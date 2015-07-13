@@ -17,6 +17,7 @@
 package eu.openg.gradle.swift.plugin
 
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
 import org.junit.Test
@@ -36,6 +37,11 @@ class SwiftPluginTest {
     @Test
     void canApplyPlugin() {
         assertThat(project.plugins.hasPlugin(SwiftPlugin)).isTrue()
+    }
+
+    @Test
+    void addsJavaPlugin() {
+        assertThat(project.plugins.hasPlugin(JavaPlugin)).isTrue()
     }
 
     @Test

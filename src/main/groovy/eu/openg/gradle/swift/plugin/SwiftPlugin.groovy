@@ -18,11 +18,13 @@ package eu.openg.gradle.swift.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
 
 class SwiftPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        project.pluginManager.apply JavaPlugin
         project.tasks.create 'swift2thrift', Swift2ThriftTask
     }
 }
