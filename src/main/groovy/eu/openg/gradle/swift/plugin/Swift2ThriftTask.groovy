@@ -30,6 +30,10 @@ class Swift2ThriftTask extends DefaultTask {
     @OutputFile
     File outputFile
 
+    Swift2ThriftTask() {
+        dependsOn 'compileJava'
+    }
+
     @TaskAction
     void swift2Thrift() {
         def converter = new Swift2ThriftConverter()

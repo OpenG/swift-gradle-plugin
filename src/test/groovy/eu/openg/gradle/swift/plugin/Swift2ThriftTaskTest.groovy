@@ -23,7 +23,7 @@ import org.junit.rules.TemporaryFolder
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.assertj.core.api.StrictAssertions.assertThat
+import static org.assertj.core.api.Assertions.assertThat
 
 class Swift2ThriftTaskTest {
 
@@ -31,7 +31,7 @@ class Swift2ThriftTaskTest {
     public TemporaryFolder testFolder = new TemporaryFolder()
 
     @Test
-    void checkPluginWorkflow() {
+    void checkConverterTaskWorkflow() {
         def project = ProjectBuilder.builder().build()
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
 
@@ -46,5 +46,13 @@ class Swift2ThriftTaskTest {
         task.swift2Thrift()
 
         assertThat(out).hasSameContentAs new File(getResource('fixtures/service.thrift').toURI())
+    }
+
+    @Test
+    void taskDependsOnJavaCompile() {
+        def project = ProjectBuilder.builder().build()
+        def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
+
+        assertThat(task.dependsOn).contains 'compileJava'
     }
 }
