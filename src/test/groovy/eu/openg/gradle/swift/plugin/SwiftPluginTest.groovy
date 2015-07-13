@@ -46,6 +46,8 @@ class SwiftPluginTest {
 
     @Test
     void addsSwift2ThriftTask() {
-        assertThat(project.tasks.swift2thrift).isInstanceOf Swift2ThriftTask
+        def task = project.tasks.swift2thrift
+        assertThat(task).isInstanceOf Swift2ThriftTask
+        assertThat(task.description).isEqualTo 'Generates Thrift IDL files from Swift-annotated Java files'
     }
 }
