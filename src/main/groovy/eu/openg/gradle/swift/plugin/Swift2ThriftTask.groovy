@@ -30,10 +30,37 @@ class Swift2ThriftTask extends DefaultTask {
     @OutputFile
     File outputFile
 
+    Swift2ThriftTask() {
+        super
+        dependsOn 'compileJava'
+    }
+
     @TaskAction
     void swift2Thrift() {
         def converter = new Swift2ThriftConverter()
+
         converter.outputFile = outputFile
-        converter.convert inputFiles
+        runWithClassLoader buildClassLoader(), {
+            converter.convert inputFiles
+        }
+    }
+
+    private ClassLoader buildClassLoader() {
+        def classLoader = new GroovyClassLoader()
+        classLoader.addClasspath project.sourceSets.main.output.classesDir as String
+        project.configurations.compile.each {
+            classLoader.addClasspath it.path
+        }
+        classLoader
+    }
+
+    private static void runWithClassLoader(ClassLoader cl, runnable) {
+        final ClassLoader currentClassLoader = Thread.currentThread().contextClassLoader
+        try {
+            Thread.currentThread().contextClassLoader = cl
+            runnable()
+        } finally {
+            Thread.currentThread().contextClassLoader = currentClassLoader
+        }
     }
 }

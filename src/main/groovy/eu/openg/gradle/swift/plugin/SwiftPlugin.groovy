@@ -18,11 +18,21 @@ package eu.openg.gradle.swift.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPlugin
 
 class SwiftPlugin implements Plugin<Project> {
 
+    private Project project
+
     @Override
     void apply(Project project) {
-        project.tasks.create 'swift2thrift', Swift2ThriftTask
+        this.project = project
+        project.pluginManager.apply JavaPlugin
+        addSwift2ThriftTask()
+    }
+
+    private void addSwift2ThriftTask() {
+        def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
+        task.description = "Generates Thrift IDL files from Swift-annotated Java files"
     }
 }
