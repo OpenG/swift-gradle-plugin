@@ -16,26 +16,27 @@
 
 package eu.openg.gradle.swift.plugin
 
-import org.gradle.testfixtures.ProjectBuilder
+import nebula.test.ProjectSpec
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.assertj.core.api.StrictAssertions.assertThat
+import static org.apache.commons.io.FileUtils.readFileToString
 
-class Swift2ThriftTaskTest {
+class Swift2ThriftTaskTest extends ProjectSpec {
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder()
 
     @Test
-    void checkPluginWorkflow() {
-        def project = ProjectBuilder.builder().build()
+    def 'perform conversion'() {
+        given:
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
 
-        def out = testFolder.newFile()
+        and:
+        def out = new File(ourProjectDir, 'service.thrift')
         task.outputFile = out
         task.inputFiles = [
                 EXAMPLE_PACKAGE + '.TDivisionByZeroException',
@@ -43,8 +44,18 @@ class Swift2ThriftTaskTest {
                 EXAMPLE_PACKAGE + '.TOperation'
         ]
 
+        when:
         task.swift2Thrift()
 
-        assertThat(out).hasSameContentAs new File(getResource('fixtures/service.thrift').toURI())
+        then:
+        readFileToString(out) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+    }
+
+    def 'task should depend on javaCompile'() {
+        given:
+        def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
+
+        expect:
+        'compileJava' in task.dependsOn
     }
 }
