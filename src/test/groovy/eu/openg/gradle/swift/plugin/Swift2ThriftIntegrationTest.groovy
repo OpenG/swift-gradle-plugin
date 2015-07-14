@@ -36,10 +36,7 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
             }
 
             dependencies {
-                compile "com.facebook.swift:swift-service:0.15.1",
-                        "com.facebook.swift:swift-codec:0.15.1",
-                        "com.facebook.nifty:nifty-core:0.15.1",
-                        "org.apache.thrift:libthrift:0.9.2"
+                compile 'com.facebook.swift:swift-annotations:0.15.1'
             }
 
             swift2thrift {
