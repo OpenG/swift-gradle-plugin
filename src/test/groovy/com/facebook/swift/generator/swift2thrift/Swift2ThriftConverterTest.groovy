@@ -16,74 +16,69 @@
 
 package com.facebook.swift.generator.swift2thrift
 
-import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import spock.lang.Specification
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.assertj.core.api.Assertions.assertThat
-import static org.assertj.core.api.StrictAssertions.assertThatThrownBy
+import static org.apache.commons.io.FileUtils.readFileToString
 
-class Swift2ThriftConverterTest {
+class Swift2ThriftConverterTest extends Specification {
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder()
 
     Swift2ThriftConverter converter
 
-    @Before
-    public void setUp() throws Exception {
+    def setup() {
         converter = new Swift2ThriftConverter()
     }
 
-    @Test
-    void whenNoInputFilesAreProvidedExceptionShouldBeThrown() {
-        assertThatThrownBy {
-            converter.convert(null)
-        }.isInstanceOf Swift2ThriftConverter.MissingInputFilesException
-        assertThatThrownBy {
-            converter.convert([])
-        }.isInstanceOf Swift2ThriftConverter.MissingInputFilesException
+    def 'at least one inputFile has to be provided'() {
+        when:
+        converter.convert inputFile
+
+        then:
+        thrown Swift2ThriftConverter.MissingInputFilesException
+
+        where:
+        inputFile << [null, []]
     }
 
-    @Test
-    void whenOutputDirIsNotSetExpectResultPrintedToStdout() {
+    void 'when outputDir is not set expect result to be printed to System.out'() {
+        setup:
         def defaultOut = System.out
         def out = new ByteArrayOutputStream()
-        try {
-            System.out = new PrintStream(out)
-            converter.convert([
-                    EXAMPLE_PACKAGE + '.TDivisionByZeroException',
-                    EXAMPLE_PACKAGE + '.TCalculatorService',
-                    EXAMPLE_PACKAGE + '.TOperation'
-            ])
-        } finally {
-            System.setOut defaultOut
-        }
+        System.out = new PrintStream(out)
 
-        def expected = readFile new File(getResource('fixtures/service.thrift').toURI())
-        assertThat(new String(out.toByteArray())).isEqualTo expected
-    }
-
-    @Test
-    void providedInputFilesShouldBeConvertedToThriftIDL() {
-        def out = testFolder.newFile()
-        converter.outputFile = out
-
+        when:
         converter.convert([
                 EXAMPLE_PACKAGE + '.TDivisionByZeroException',
                 EXAMPLE_PACKAGE + '.TCalculatorService',
                 EXAMPLE_PACKAGE + '.TOperation'
         ])
 
-        assertThat(out).hasSameContentAs new File(getResource('fixtures/service.thrift').toURI())
+        then:
+        new String(out.toByteArray()) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+
+        cleanup:
+        System.setOut defaultOut
     }
 
-    static def readFile(File file) {
-        file.readLines().inject { result, line ->
-            result + '\n' + line
-        } + '\n'
+    def 'convert inputFiles to Thrift IDL'() {
+        given:
+        def out = testFolder.newFile()
+        converter.outputFile = out
+
+        when:
+        converter.convert([
+                EXAMPLE_PACKAGE + '.TDivisionByZeroException',
+                EXAMPLE_PACKAGE + '.TCalculatorService',
+                EXAMPLE_PACKAGE + '.TOperation'
+        ])
+
+        then:
+        readFileToString(out) == readFileToString(new File(getResource('fixtures/service.thrift').file))
     }
 }

@@ -16,38 +16,43 @@
 
 package eu.openg.gradle.swift.plugin
 
-import org.gradle.api.Project
+import nebula.test.PluginProjectSpec
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Before
-import org.junit.Test
 
-import static org.assertj.core.api.StrictAssertions.assertThat
+class SwiftPluginTest extends PluginProjectSpec {
 
-class SwiftPluginTest {
+    @Override
+    String getPluginName() {
+        'eu.openg.swift'
+    }
 
-    Project project;
-
-    @Before
-    void setUp() throws Exception {
-        project = ProjectBuilder.builder().build()
+    def 'can apply plugin'() {
+        when:
         project.apply plugin: SwiftPlugin
+
+        then:
+        project.plugins.hasPlugin SwiftPlugin
     }
 
-    @Test
-    void canApplyPlugin() {
-        assertThat(project.plugins.hasPlugin(SwiftPlugin)).isTrue()
+    def 'applies Java plugin'() {
+        when:
+        project.apply plugin: SwiftPlugin
+
+        then:
+        project.plugins.hasPlugin JavaPlugin
     }
 
-    @Test
-    void addsJavaPlugin() {
-        assertThat(project.plugins.hasPlugin(JavaPlugin)).isTrue()
-    }
+    def 'adds swift2thrift task'() {
+        when:
+        project.apply plugin: SwiftPlugin
 
-    @Test
-    void addsSwift2ThriftTask() {
+        and:
         def task = project.tasks.swift2thrift
-        assertThat(task).isInstanceOf Swift2ThriftTask
-        assertThat(task.description).isEqualTo 'Generates Thrift IDL files from Swift-annotated Java files'
+
+        then:
+        task instanceof Swift2ThriftTask
+
+        and:
+        task.description == 'Generates Thrift IDL files from Swift-annotated Java files'
     }
 }
