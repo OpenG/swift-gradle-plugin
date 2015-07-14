@@ -40,9 +40,12 @@ class Swift2ThriftTask extends DefaultTask {
         def converter = new Swift2ThriftConverter()
 
         converter.outputFile = outputFile
-        runWithClassLoader buildClassLoader(), {
+        if (project.hasProperty('sourceSets'))
+            runWithClassLoader buildClassLoader(), {
+                converter.convert inputFiles
+            }
+        else
             converter.convert inputFiles
-        }
     }
 
     private ClassLoader buildClassLoader() {
