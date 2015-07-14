@@ -32,6 +32,8 @@ class Swift2ThriftTask extends DefaultTask {
     @Input
     Set<String> inputFiles
 
+    Map<String, String> namespaceMap
+
     @OutputFile
     File outputFile
 
@@ -43,8 +45,13 @@ class Swift2ThriftTask extends DefaultTask {
     @TaskAction
     void swift2Thrift() {
         def converter = new Swift2ThriftConverter()
+
+        if (namespaceMap != null)
+            converter.namespaceMap = namespaceMap
+
         def tmpOutput = usePlainJavaNamespace ? createTempFile('swift2thrift', 'outputFile') : outputFile
         converter.outputFile = tmpOutput
+
         try {
             if (project.hasProperty('sourceSets'))
                 runWithClassLoader buildClassLoader(), {

@@ -53,7 +53,7 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         out.text == getResource('fixtures/service.thrift').text
     }
 
-    def 'when usePlainJavaNamespace is set to true expect java namespace without .swift suffix'() {
+    def 'thrift with plain java namespace'() {
         given:
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
 
@@ -74,5 +74,37 @@ class Swift2ThriftTaskTest extends ProjectSpec {
 
         then:
         out.text.contains 'namespace java com.example.calculator.protocol'
+    }
+
+    @Test
+    def 'additional language namespaces'() {
+        given:
+        def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
+
+        and:
+        def out = new File(ourProjectDir, 'service.thrift')
+        task.outputFile = out
+        task.inputFiles = [
+                EXAMPLE_PACKAGE + '.TDivisionByZeroException',
+                EXAMPLE_PACKAGE + '.TCalculatorService',
+                EXAMPLE_PACKAGE + '.TOperation'
+        ]
+
+        when:
+        task.namespaceMap = [
+                'cpp': 'example',
+                'php': 'com\\example'
+        ]
+
+        task.swift2Thrift()
+
+        and:
+        def output = out.text
+
+        then:
+        output.contains 'namespace cpp example'
+
+        and:
+        output.contains 'namespace php com\\example'
     }
 }

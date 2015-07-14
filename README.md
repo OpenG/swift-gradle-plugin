@@ -29,11 +29,12 @@ Gradle Swift Plugin uses Swift2Thrift code generator to generate `.thrift` files
 
 ## swift2thrift task properties
 
-Name                  | Type        | Default | Description
-----------------------|-------------|---------|------------------------------------------------------------
-inputFiles            | Set<String> | null    | A list of fully qualified class names to convert
-outputFile            | File        | null    | A file where Thrift output should be written
-usePlainJavaNamespace | boolean     | false   | Should 'java' be used for namespace instead of 'java.swift'
+Name                  | Type                | Default | Description
+----------------------|---------------------|---------|------------------------------------------------------------
+inputFiles            | Set<String>         | null    | A list of fully qualified class names to convert
+outputFile            | File                | null    | A file where Thrift output should be written
+namespaceMap          | Map<String, String> | null    | A map of namespaces for particular languages to include
+usePlainJavaNamespace | boolean             | false   | Should 'java' be used for namespace instead of 'java.swift'
 
 # Implicitly Applied Plugins
 
