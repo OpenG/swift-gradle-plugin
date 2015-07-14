@@ -17,18 +17,12 @@
 package eu.openg.gradle.swift.plugin
 
 import nebula.test.ProjectSpec
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TemporaryFolder
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.apache.commons.io.FileUtils.readFileToString
 
 class Swift2ThriftTaskTest extends ProjectSpec {
-
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder()
 
     def 'task should depend on javaCompile'() {
         given:
@@ -56,7 +50,7 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         task.swift2Thrift()
 
         then:
-        readFileToString(out) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+        out.text == getResource('fixtures/service.thrift').text
     }
 
     def 'when usePlainJavaNamespace is set to true expect java namespace without .swift suffix'() {
