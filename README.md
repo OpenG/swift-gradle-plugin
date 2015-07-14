@@ -15,7 +15,7 @@ Build script snippet for use in all Gradle versions:
         }
       }
       dependencies {
-        classpath "gradle.plugin.eu.openg.gradle:swift-gradle-plugin:0.3.0"
+        classpath "gradle.plugin.eu.openg.gradle:swift-gradle-plugin:0.4.0"
       }
     }
     
@@ -24,7 +24,7 @@ Build script snippet for use in all Gradle versions:
 Build script snippet for Gradle 2.1+:
 
     plugins {
-      id "eu.openg.swift" version "0.3.0"
+      id "eu.openg.swift" version "0.4.0"
     }
 
 # Tasks
