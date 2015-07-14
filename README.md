@@ -31,6 +31,8 @@ Build script snippet for Gradle 2.1+:
 
 ## swift2thrift
 
+Generates Thrift IDL files from Swift-annotated Java files.
+
 ### Task properties
 
 Name                  | Type                | Default | Description
