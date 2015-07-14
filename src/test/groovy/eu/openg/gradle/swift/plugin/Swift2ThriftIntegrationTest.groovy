@@ -20,7 +20,6 @@ import nebula.test.IntegrationSpec
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
 import static org.apache.commons.io.FileUtils.copyDirectory
-import static org.apache.commons.io.FileUtils.readFileToString
 
 class Swift2ThriftIntegrationTest extends IntegrationSpec {
 
@@ -53,6 +52,6 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
         runTasksSuccessfully 'swift2thrift'
 
         then:
-        readFileToString(file('services.thrift')) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+        file('services.thrift').text == getResource('fixtures/service.thrift').text
     }
 }

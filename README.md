@@ -27,6 +27,18 @@ Gradle Swift Plugin uses Swift2Thrift code generator to generate `.thrift` files
         outputFile = file('services.thrift')
     }
 
+## swift2thrift task properties
+
+Name                  | Type        | Default | Description
+----------------------|-------------|---------|------------------------------------------------------------
+inputFiles            | Set<String> | null    | A list of fully qualified class names to convert
+outputFile            | File        | null    | A file where Thrift output should be written
+usePlainJavaNamespace | boolean     | false   | Should 'java' be used for namespace instead of 'java.swift'
+
+# Implicitly Applied Plugins
+
+Java
+
 # License
 
 Gradle Swift Plugin is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
