@@ -23,7 +23,7 @@ apply plugin: 'maven-publish'
 
 description = 'A gradle plugin for generating Thrift IDL files from Swift-annotated Java files'
 group = 'eu.openg.gradle'
-version = '0.3.0-SNAPSHOT'
+version = '0.3.0'
 
 ext {
     title = 'Thrift Gradle Plugin'
