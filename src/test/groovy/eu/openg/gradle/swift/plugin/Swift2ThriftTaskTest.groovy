@@ -30,6 +30,14 @@ class Swift2ThriftTaskTest extends ProjectSpec {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder()
 
+    def 'task should depend on javaCompile'() {
+        given:
+        def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
+
+        expect:
+        'compileJava' in task.dependsOn
+    }
+
     @Test
     def 'perform conversion'() {
         given:
@@ -51,11 +59,26 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         readFileToString(out) == readFileToString(new File(getResource('fixtures/service.thrift').file))
     }
 
-    def 'task should depend on javaCompile'() {
+    def 'when usePlainJavaNamespace is set to true expect java namespace without .swift suffix'() {
         given:
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
 
-        expect:
-        'compileJava' in task.dependsOn
+        and:
+        def out = new File(ourProjectDir, 'service.thrift')
+        task.outputFile = out
+        task.inputFiles = [
+                EXAMPLE_PACKAGE + '.TDivisionByZeroException',
+                EXAMPLE_PACKAGE + '.TCalculatorService',
+                EXAMPLE_PACKAGE + '.TOperation'
+        ]
+
+        when:
+        task.usePlainJavaNamespace = true
+
+        and:
+        task.swift2Thrift()
+
+        then:
+        out.text.contains 'namespace java com.example.calculator.protocol'
     }
 }
