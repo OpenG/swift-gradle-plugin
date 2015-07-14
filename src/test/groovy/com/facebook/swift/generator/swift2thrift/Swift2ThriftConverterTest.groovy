@@ -22,7 +22,6 @@ import spock.lang.Specification
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.apache.commons.io.FileUtils.readFileToString
 
 class Swift2ThriftConverterTest extends Specification {
 
@@ -60,7 +59,7 @@ class Swift2ThriftConverterTest extends Specification {
         ])
 
         then:
-        new String(out.toByteArray()) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+        new String(out.toByteArray()) == getResource('fixtures/service.thrift').text
 
         cleanup:
         System.setOut defaultOut
@@ -79,6 +78,6 @@ class Swift2ThriftConverterTest extends Specification {
         ])
 
         then:
-        readFileToString(out) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+        out.text == getResource('fixtures/service.thrift').text
     }
 }

@@ -22,10 +22,17 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
+import static java.io.File.createTempFile
+
 class Swift2ThriftTask extends DefaultTask {
 
     @Input
+    boolean usePlainJavaNamespace
+
+    @Input
     Set<String> inputFiles
+
+    Map<String, String> namespaceMap
 
     @OutputFile
     File outputFile
@@ -39,13 +46,25 @@ class Swift2ThriftTask extends DefaultTask {
     void swift2Thrift() {
         def converter = new Swift2ThriftConverter()
 
-        converter.outputFile = outputFile
-        if (project.hasProperty('sourceSets'))
-            runWithClassLoader buildClassLoader(), {
+        if (namespaceMap != null)
+            converter.namespaceMap = namespaceMap
+
+        def tmpOutput = usePlainJavaNamespace ? createTempFile('swift2thrift', 'outputFile') : outputFile
+        converter.outputFile = tmpOutput
+
+        try {
+            if (project.hasProperty('sourceSets'))
+                runWithClassLoader buildClassLoader(), {
+                    converter.convert inputFiles
+                }
+            else
                 converter.convert inputFiles
-            }
-        else
-            converter.convert inputFiles
+        } finally {
+            if (usePlainJavaNamespace)
+                outputFile.withWriter {
+                    it << tmpOutput.text.replaceAll('namespace java.swift ', 'namespace java ')
+                }
+        }
     }
 
     private ClassLoader buildClassLoader() {

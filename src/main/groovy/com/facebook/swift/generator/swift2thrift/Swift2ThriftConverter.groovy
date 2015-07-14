@@ -28,6 +28,10 @@ class Swift2ThriftConverter {
         builder.outputFile outputFile
     }
 
+    void setNamespaceMap(Map<String, String> namespaceMap) {
+        builder.namespaceMap namespaceMap
+    }
+
     void convert(Iterable<String> inputFiles) {
         if (inputFiles == null || !inputFiles.size())
             throw new MissingInputFilesException()

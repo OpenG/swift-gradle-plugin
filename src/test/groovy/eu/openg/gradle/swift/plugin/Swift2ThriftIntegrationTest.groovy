@@ -20,7 +20,6 @@ import nebula.test.IntegrationSpec
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
 import static org.apache.commons.io.FileUtils.copyDirectory
-import static org.apache.commons.io.FileUtils.readFileToString
 
 class Swift2ThriftIntegrationTest extends IntegrationSpec {
 
@@ -36,10 +35,7 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
             }
 
             dependencies {
-                compile "com.facebook.swift:swift-service:0.15.1",
-                        "com.facebook.swift:swift-codec:0.15.1",
-                        "com.facebook.nifty:nifty-core:0.15.1",
-                        "org.apache.thrift:libthrift:0.9.2"
+                compile 'com.facebook.swift:swift-annotations:0.15.1'
             }
 
             swift2thrift {
@@ -56,6 +52,6 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
         runTasksSuccessfully 'swift2thrift'
 
         then:
-        readFileToString(file('services.thrift')) == readFileToString(new File(getResource('fixtures/service.thrift').file))
+        file('services.thrift').text == getResource('fixtures/service.thrift').text
     }
 }
