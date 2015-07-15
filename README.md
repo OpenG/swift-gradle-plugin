@@ -8,24 +8,28 @@ Gradle Swift Plugin uses Swift2Thrift code generator to generate `.thrift` files
 
 Build script snippet for use in all Gradle versions:
 
-    buildscript {
-      repositories {
-        maven {
-          url "https://plugins.gradle.org/m2/"
-        }
-      }
-      dependencies {
-        classpath "gradle.plugin.eu.openg.gradle:swift-gradle-plugin:0.4.0"
-      }
+```groovy
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
-    
-    apply plugin: "eu.openg.swift"
+  }
+  dependencies {
+    classpath "gradle.plugin.eu.openg.gradle:swift-gradle-plugin:0.4.0"
+  }
+}
+```
+
+apply plugin: "eu.openg.swift"
 
 Build script snippet for Gradle 2.1+:
 
-    plugins {
-      id "eu.openg.swift" version "0.4.0"
-    }
+```groovy
+plugins {
+  id "eu.openg.swift" version "0.4.0"
+}
+```
 
 # Tasks
 
@@ -44,21 +48,23 @@ usePlainJavaNamespace | boolean             | false   | Should 'java' be used fo
 
 ### Example
 
-    swift2thrift {
-        inputFiles = [
-            'com.example.calculator.protocol.TDivisionByZeroException',
-            'com.example.calculator.protocol.TCalculatorService',
-            'com.example.calculator.protocol.TOperation'
-        ]
-        outputFile = file('services.thrift')
-        
-        namespaceMap = [
-            'cpp': 'example',
-            'php': 'com\\example'
-        ]
-        
-        usePlainJavaNamespace = true
-    }
+```groovy
+swift2thrift {
+    inputFiles = [
+        'com.example.calculator.protocol.TDivisionByZeroException',
+        'com.example.calculator.protocol.TCalculatorService',
+        'com.example.calculator.protocol.TOperation'
+    ]
+    outputFile = file('services.thrift')
+    
+    namespaceMap = [
+        'cpp': 'example',
+        'php': 'com\\example'
+    ]
+    
+    usePlainJavaNamespace = true
+}
+```
 
 # Implicitly Applied Plugins
 
