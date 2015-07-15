@@ -17,7 +17,6 @@
 package eu.openg.gradle.swift.plugin
 
 import nebula.test.ProjectSpec
-import org.junit.Test
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
@@ -32,7 +31,6 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         'compileJava' in task.dependsOn
     }
 
-    @Test
     def 'perform conversion'() {
         given:
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
@@ -76,7 +74,6 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         out.text.contains 'namespace java com.example.calculator.protocol'
     }
 
-    @Test
     def 'additional language namespaces'() {
         given:
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask

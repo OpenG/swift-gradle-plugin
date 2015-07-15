@@ -17,32 +17,21 @@
 package eu.openg.gradle.swift.plugin
 
 import nebula.test.IntegrationSpec
+import org.gradle.api.plugins.JavaPlugin
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
-import static org.apache.commons.io.FileUtils.copyDirectory
 
 class Swift2ThriftIntegrationTest extends IntegrationSpec {
 
     def 'setup and run swift2thrift task'() {
-        copyDirectory new File('src/test/groovy/com/example').absoluteFile,
-                new File(projectDir, 'src/main/java/com/example')
-
+        createSwiftService()
         buildFile << """
+            ${applyPlugin(JavaPlugin)}
             ${applyPlugin(SwiftPlugin)}
-
-            repositories {
-                mavenCentral()
-            }
-
-            dependencies {
-                compile 'com.facebook.swift:swift-annotations:0.15.1'
-            }
 
             swift2thrift {
                 inputFiles = [
-                        'com.example.calculator.protocol.TDivisionByZeroException',
-                        'com.example.calculator.protocol.TCalculatorService',
-                        'com.example.calculator.protocol.TOperation'
+                        'com.example.TInterestingService'
                 ]
                 outputFile = file('services.thrift')
             }
@@ -52,6 +41,26 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
         runTasksSuccessfully 'swift2thrift'
 
         then:
-        file('services.thrift').text == getResource('fixtures/service.thrift').text
+        file('services.thrift').text == getResource('fixtures/interestingService.thrift').text
+    }
+
+    private void createSwiftService() {
+        def testFile = createFile('src/main/java/com/example/TInterestingService.java')
+        testFile << """
+            package com.example;
+
+            import com.facebook.swift.service.ThriftMethod;
+            import com.facebook.swift.service.ThriftService;
+
+            @ThriftService
+            public interface TInterestingService {
+
+                @ThriftMethod
+                int getValue(int value);
+
+                @ThriftMethod
+                void doAction(String text);
+            }
+        """.stripIndent()
     }
 }
