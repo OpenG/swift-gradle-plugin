@@ -59,7 +59,7 @@ swift2thrift {
     
     namespaceMap = [
         'cpp': 'example',
-        'php': 'com\\example'
+        'php': 'com.example'
     ]
     
     usePlainJavaNamespace = true

@@ -90,7 +90,7 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         when:
         task.namespaceMap = [
                 'cpp': 'example',
-                'php': 'com\\example'
+                'php': 'com.example'
         ]
 
         task.swift2Thrift()
@@ -102,6 +102,6 @@ class Swift2ThriftTaskTest extends ProjectSpec {
         output.contains 'namespace cpp example'
 
         and:
-        output.contains 'namespace php com\\example'
+        output.contains 'namespace php com.example'
     }
 }
