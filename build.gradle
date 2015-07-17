@@ -26,7 +26,7 @@ group = 'eu.openg.gradle'
 version = '0.4-SNAPSHOT'
 
 ext {
-    title = 'Thrift Gradle Plugin'
+    title = 'Swift Gradle Plugin'
     organizationName = 'OpenG (Atvira Karta, LLC)'
 }
 
