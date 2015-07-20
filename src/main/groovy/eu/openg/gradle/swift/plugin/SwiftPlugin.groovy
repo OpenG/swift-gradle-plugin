@@ -33,6 +33,6 @@ class SwiftPlugin implements Plugin<Project> {
 
     private void addSwift2ThriftTask() {
         def task = project.tasks.create 'swift2thrift', Swift2ThriftTask
-        task.description = "Generates Thrift IDL files from Swift-annotated Java files"
+        task.description = 'Generates Thrift IDL files from Swift-annotated Java files'
     }
 }

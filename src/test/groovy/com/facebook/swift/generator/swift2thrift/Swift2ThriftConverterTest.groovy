@@ -16,17 +16,13 @@
 
 package com.facebook.swift.generator.swift2thrift
 
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 import static eu.openg.gradle.swift.plugin.TestHelpers.EXAMPLE_PACKAGE
 import static eu.openg.gradle.swift.plugin.TestHelpers.getResource
+import static java.io.File.createTempFile
 
 class Swift2ThriftConverterTest extends Specification {
-
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder()
 
     Swift2ThriftConverter converter
 
@@ -66,6 +62,9 @@ class Swift2ThriftConverterTest extends Specification {
     }
 
     def 'convert inputFiles to Thrift IDL'() {
+        setup:
+        def testFolder = createTempFile 'junit', ''
+
         given:
         def out = testFolder.newFile()
         converter.outputFile = out
@@ -79,5 +78,8 @@ class Swift2ThriftConverterTest extends Specification {
 
         then:
         out.text == getResource('fixtures/service.thrift').text
+
+        cleanup:
+        testFolder.deleteDir()
     }
 }

@@ -26,8 +26,8 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
     def 'setup and run swift2thrift task'() {
         createSwiftService()
         buildFile << """
-            ${applyPlugin(JavaPlugin)}
-            ${applyPlugin(SwiftPlugin)}
+            ${applyPlugin JavaPlugin}
+            ${applyPlugin SwiftPlugin}
 
             swift2thrift {
                 inputFiles = [
@@ -45,8 +45,8 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
     }
 
     private void createSwiftService() {
-        def testFile = createFile('src/main/java/com/example/TInterestingService.java')
-        testFile << """
+        def testFile = createFile 'src/main/java/com/example/TInterestingService.java'
+        testFile << '''
             package com.example;
 
             import com.facebook.swift.service.ThriftMethod;
@@ -61,6 +61,6 @@ class Swift2ThriftIntegrationTest extends IntegrationSpec {
                 @ThriftMethod
                 void doAction(String text);
             }
-        """.stripIndent()
+        '''.stripIndent()
     }
 }
