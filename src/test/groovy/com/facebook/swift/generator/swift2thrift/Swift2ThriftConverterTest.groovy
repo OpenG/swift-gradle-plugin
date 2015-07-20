@@ -63,10 +63,7 @@ class Swift2ThriftConverterTest extends Specification {
 
     def 'convert inputFiles to Thrift IDL'() {
         setup:
-        def testFolder = createTempFile 'junit', ''
-
-        given:
-        def out = testFolder.newFile()
+        def out = createTempFile 'junit', ''
         converter.outputFile = out
 
         when:
@@ -80,6 +77,6 @@ class Swift2ThriftConverterTest extends Specification {
         out.text == getResource('fixtures/service.thrift').text
 
         cleanup:
-        testFolder.deleteDir()
+        out.delete()
     }
 }
